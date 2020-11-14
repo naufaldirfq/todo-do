@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Todo-do</string>
+    <string name="intro_title">Get Organized</string>
+    <string name="intro_desc">Todo-do is a simple and effective to-do list and task manager app which helps you manage time</string>
+    <string name="get_started">Get Started</string>
+    <string name="sync_google">Sync With Google</string>
+    <string name="intro2_desc">You can use todo-do on any android devices and synchronize your todo list with google account</string>
+    <string name="sign_in">Continue With Google</string>
+</resources>
