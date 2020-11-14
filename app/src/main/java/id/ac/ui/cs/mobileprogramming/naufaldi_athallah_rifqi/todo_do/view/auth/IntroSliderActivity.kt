@@ -1,4 +1,4 @@
-package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do
+package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -17,10 +16,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.*
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.MainActivity
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.R
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.SplashScreenViewModel
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.RC_SIGN_IN
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.USER
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth.AuthViewModel
 import kotlinx.android.synthetic.main.activity_intro_slider.*
 
 class IntroSliderActivity : AppCompatActivity() {
@@ -50,10 +51,14 @@ class IntroSliderActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        val adapter = IntroSliderAdapter(this)
+        val adapter =
+            IntroSliderAdapter(
+                this
+            )
         vpIntroSlider.adapter = adapter
         fragmentList.addAll(listOf(
-            IntroFirstFragment(), IntroSecondFragment()
+            IntroFirstFragment(),
+            IntroSecondFragment()
         ))
         adapter.setFragmentList(fragmentList)
         indicatorLayout.setIndicatorCount(adapter.itemCount)

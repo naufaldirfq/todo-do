@@ -1,21 +1,22 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.ktx.Firebase
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.USER
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.helper.ImageLoader
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth.IntroSliderActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.setting.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_profile.*
@@ -27,17 +28,17 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(bottom_app_bar)
+        initView()
         val user : User = getUserFromIntent()
         initGoogleSignInClient()
         setMessageToMessageTextView(user)
-        initView()
 
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.bottomappbar_menu, menu)
-        actionBar?.elevation = 0f
         return true
     }
 
@@ -71,13 +72,30 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     private fun addTodo() {
         //TODO: bikin logic masukin todo
+        Toast.makeText(this, "ADD CLICKED", Toast.LENGTH_LONG).show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.app_bar_edit_todo -> editTodo()
-            R.id.app_bar_delete_todo -> deleteTodo()
-            R.id.app_bar_settings -> goToSettingsActivity()
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        Log.d("ON OPTIONS ITEM", "CLICKED")
+        when (item!!.itemId) {
+            R.id.app_bar_settings -> {
+                goToSettingsActivity()
+                return true
+
+            }
+            R.id.app_bar_delete_todo -> {
+                deleteTodo()
+                return true
+
+            }
+            R.id.app_bar_edit_todo -> {
+                editTodo()
+                return true
+            }
+            R.id.app_bar_sign_out -> {
+                signOut()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -91,6 +109,7 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     }
 
     private fun goToSettingsActivity(): Boolean {
+        Log.d("SETTINGS", "GO TO SETTINGS")
         intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         return true
@@ -107,6 +126,23 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     private fun goToAuthInActivity() {
         intent = Intent(this, IntroSliderActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun signOut() {
+        singOutFirebase()
+        signOutGoogle()
+        val i = baseContext.packageManager
+            .getLaunchIntentForPackage(baseContext.packageName)
+        i!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(i)
+    }
+
+    private fun singOutFirebase() {
+        firebaseAuth.signOut()
+    }
+
+    private fun signOutGoogle() {
+        googleSignInClient.signOut()
     }
 
 

@@ -17,11 +17,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".IntroSliderActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".view.auth.IntroSliderActivity" />
         <activity
             android:name=".view.setting.SettingsActivity"
             android:label="Settings"
+            android:theme="@style/AppTheme.WithActionBar"
             android:parentActivityName=".MainActivity">
 
             <meta-data

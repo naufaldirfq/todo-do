@@ -1,4 +1,4 @@
-package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do
+package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

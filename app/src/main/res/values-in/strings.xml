@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Todo-do</string>
+    <string name="intro_title">Mulai teratur</string>
+    <string name="intro_desc">Todo-do adalah aplikasi pengelola tugas yang membantu kalian dalam mengatur waktu</string>
+    <string name="get_started">Ayo Mulai</string>
+    <string name="sync_google">Sinkronisasi dengan Google</string>
+    <string name="intro2_desc">Kalian bisa menggunakan Todo-do di banyak perangkat Android dan sinkronisasikan tugas kalian dengan akun Google</string>
+    <string name="sign_in">Lanjutkan dengan google</string>
+</resources>
