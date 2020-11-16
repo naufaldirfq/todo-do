@@ -7,4 +7,26 @@
     <string name="sync_google">Sinkronisasi dengan Google</string>
     <string name="intro2_desc">Kalian bisa menggunakan Todo-do di banyak perangkat Android dan sinkronisasikan tugas kalian dengan akun Google</string>
     <string name="sign_in">Lanjutkan dengan google</string>
+
+    <string name="label_details">Details</string>
+    <string name="label_add_todo">Add Todo</string>
+    <string name="label_switch_account">Switch account</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_no_todo_list_found">No to-do list found</string>
+    <string name="label_clear_completed_task">Clear completed task</string>
+    <string name="label_edit_todo">Edit</string>
+    <string name="label_update_todo">Update todo</string>
+    <string name="label_add">Add</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_clear_completed">Clear completed</string>
+    <string name="label_mark_all_as_complete">Mark all as complete</string>
+
+    <string name="add_todo_success_message">Task added successfully!</string>
+    <string name="update_todo_success_message">Task updated successfully!</string>
+    <string name="delete_todo_success_message">Task deleted successfully!</string>
+    <string name="update_incomplete_tasks_success_message">All incomplete tasks marked as completed!</string>
+    <string name="clear_completed_tasks_success_message">All completed tasks cleared successfully!</string>
+    <string name="task_marked_as_completed_success_message">Task marked as completed</string>
+    <string name="task_marked_as_incomplete_success_message">Task marked as incomplete!</string>
+
 </resources>
