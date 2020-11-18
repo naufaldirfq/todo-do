@@ -14,16 +14,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User;
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Const;
 
 import static id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.HelperClass.logErrorMessage;
-
-import static id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.USERS;
 
 @SuppressWarnings("ConstantConditions")
 public class AuthRepository {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-    private CollectionReference usersRef = rootRef.collection(USERS);
+    private CollectionReference usersRef = rootRef.collection(Const.Collection.USERS);
 
     public MutableLiveData<User> firebaseSignInWithGoogle(AuthCredential googleAuthCredential) {
         MutableLiveData<User> authenticatedUserMutableLiveData = new MutableLiveData<>();

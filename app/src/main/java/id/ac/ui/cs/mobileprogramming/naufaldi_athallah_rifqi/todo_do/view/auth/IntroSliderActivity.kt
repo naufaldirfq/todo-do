@@ -20,8 +20,8 @@ import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.MainActivit
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.R
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.SplashScreenViewModel
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.RC_SIGN_IN
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.USER
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Const
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo.TodoLocalActivity
 import kotlinx.android.synthetic.main.activity_intro_slider.*
 
 class IntroSliderActivity : AppCompatActivity() {
@@ -85,14 +85,14 @@ class IntroSliderActivity : AppCompatActivity() {
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        startActivityForResult(signInIntent, Const.RequestCode.RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == Const.RequestCode.RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
@@ -138,7 +138,13 @@ class IntroSliderActivity : AppCompatActivity() {
 
     private fun goToMainActivity(user : User) {
         intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(USER, user)
+        intent.putExtra(Const.Collection.USER, user)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun goToUserFormActivity() {
+        intent = Intent(this, UserFormActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -151,7 +157,7 @@ class IntroSliderActivity : AppCompatActivity() {
                     tvSkip.visibility = View.VISIBLE
                     tvNext.text = "Next"
                 } else {
-                    tvSkip.visibility = View.GONE
+                    tvSkip.visibility = View.VISIBLE
                     tvNext.text = "Continue With Google"
                 }
             }
@@ -159,6 +165,7 @@ class IntroSliderActivity : AppCompatActivity() {
         tvSkip.setOnClickListener {
             val position = vpIntroSlider.currentItem
             vpIntroSlider.currentItem = position + 1
+            goToUserFormActivity()
         }
         tvNext.setOnClickListener {
             val position = vpIntroSlider.currentItem

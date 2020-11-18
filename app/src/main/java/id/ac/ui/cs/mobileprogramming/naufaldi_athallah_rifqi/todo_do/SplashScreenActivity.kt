@@ -9,8 +9,10 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.USER
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Const
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.helper.AppPreferences
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth.IntroSliderActivity
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo.TodoLocalActivity
 
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var splashScreenViewModel: SplashScreenViewModel
@@ -23,6 +25,7 @@ class SplashScreenActivity : AppCompatActivity() {
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         setContentView(R.layout.splash_screen)
         initSplashScreenViewModel()
+        initSharedPreferences()
         Handler().postDelayed(
             {
 //                intent = Intent(this, IntroSliderActivity::class.java)
@@ -36,14 +39,21 @@ class SplashScreenActivity : AppCompatActivity() {
         splashScreenViewModel = ViewModelProvider(this).get(SplashScreenViewModel::class.java)
     }
 
+    private fun initSharedPreferences() {
+        AppPreferences.init(this)
+    }
+
     private fun checkIfUserIsAuthenticated() {
         Log.d("INIT", "CHECK USER")
         splashScreenViewModel.checkIfUserIsAuthenticated()
         splashScreenViewModel.isUserAuthenticatedLiveData.observe(this, Observer {
             Log.d("OBSERVE", "OBSERVE IS AUTHENTICATED OR NOT")
             if (!it?.isAuthenticated!!) {
-                Log.d("OBSERVE", "OBSERVE IS NOT AUTHENTICATED")
-                goToIntroActivity()
+                if (AppPreferences.isLogin) {
+                    goToTodoLocalActivity()
+                } else {
+                    goToIntroActivity()
+                }
                 finish()
             } else {
                 Log.d("OBSERVE", "OBSERVE IS AUTHENTICATED")
@@ -69,10 +79,15 @@ class SplashScreenActivity : AppCompatActivity() {
         })
     }
 
+    private fun goToTodoLocalActivity() {
+        intent = Intent(this, TodoLocalActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun goToMainActivity(user : User) {
         Log.d("INTENT", "MASUK MAIN ACTIVITY")
         intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(USER, user)
+        intent.putExtra(Const.Collection.USER, user)
         startActivity(intent)
     }
 }

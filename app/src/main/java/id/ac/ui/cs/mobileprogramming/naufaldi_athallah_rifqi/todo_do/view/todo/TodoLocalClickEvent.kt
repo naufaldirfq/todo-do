@@ -1,9 +1,8 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo
 
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.Todo
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoLocal
 
-interface TodoClickEvent {
+interface TodoLocalClickEvent {
 
     companion object {
         // actions are used to make the callback method generic for all
@@ -13,6 +12,6 @@ interface TodoClickEvent {
         const val ACTION_DELETE = "delete"
     }
 
-    fun onClickTodo(todo: Todo, action: String, position: Int)
+    fun onClickTodoLocal(todo: TodoLocal, action: String, position: Int)
 
 }

@@ -3,6 +3,7 @@ package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.help
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputEditText
 
@@ -11,7 +12,7 @@ object Validator {
     // this function receives TextInputEditText list as input and perform validation.
     // here, validation is simple: the input is empty or not.
     // if all input fields are okay it enables the submit button of the dialog
-    fun forceValidation(editTextArray: Array<TextInputEditText>, dialog: AlertDialog) {
+    fun forceValidation(editTextArray: Array<EditText>, dialog: AlertDialog) {
         editTextArray.forEach {editText ->
             editText.addTextChangedListener(object: TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

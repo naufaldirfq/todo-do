@@ -33,6 +33,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+        <activity
+            android:name=".view.todo.TodoLocalActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".view.auth.UserFormActivity"/>
+        <activity android:name=".view.profile.ProfileActivity"/>
     </application>
 
 </manifest>

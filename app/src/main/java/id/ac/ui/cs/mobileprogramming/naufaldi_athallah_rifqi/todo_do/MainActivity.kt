@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.Todo
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.databinding.PromptTodoBinding
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Constants.USER
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Const
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.firebase.FirestoreService
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.firebase.callback.TodoCallback
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.firebase.callback.TodoListCallback
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     }
 
     private fun getUserFromIntent() : User {
-        return intent.getSerializableExtra(USER) as User
+        return intent.getSerializableExtra(Const.Collection.USER) as User
     }
 
     private fun initGoogleSignInClient() {
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         )
 
         val dateNow = FormatUtil().formatDate(Date(), FormatUtil.dd_MMM_yyyy)
-        binding.tietTodoDate.text = SpannableStringBuilder(dateNow)
+//        binding.tietTodoDate.text = SpannableStringBuilder(dateNow)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.label_add_todo)
@@ -122,10 +122,10 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                 swipe_refresh.isRefreshing = true
 
                 val todoTitle = binding.tietTodoTitle.text.toString()
-                val date = binding.tietTodoDate.text.toString()
+//                val date = binding.tietTodoDate.text.toString()
 
                 val todo = Todo(
-                    "", todoTitle, false, date, user.uid!!, ""
+                    "", todoTitle, false, "", user.uid!!, ""
                 )
 
                 remote.addTodo(todo, object: TodoCallback {
@@ -262,11 +262,9 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     }
 
     private fun deleteTodo(todo: Todo, position: Int) {
-
     }
 
     private fun goToSettingsActivity(): Boolean {
-        Log.d("SETTINGS", "GO TO SETTINGS")
         intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         return true

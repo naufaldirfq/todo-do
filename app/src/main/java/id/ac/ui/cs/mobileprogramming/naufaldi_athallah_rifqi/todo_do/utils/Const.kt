@@ -5,6 +5,7 @@ object Const {
     interface RequestCode {
         companion object {
             const val AUTH = 11
+            const val RC_SIGN_IN = 123
         }
     }
 
@@ -13,6 +14,8 @@ object Const {
         companion object {
             const val USER = "user"
             const val TODO = "todo"
+            const val TAG = "FirebaseAuthAppTag"
+            const val USERS = "users"
         }
     }
 

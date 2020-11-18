@@ -5,59 +5,63 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.R
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.Todo
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoLocal
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.databinding.ItemTodoBinding
 
-class TodoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TodoLocalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var listOfTodo = ArrayList<Todo>()
-    private var listener: TodoClickEvent? = null
+    private var listOfTodoLocal = ArrayList<TodoLocal>()
+    private var listener: TodoLocalClickEvent? = null
 
-    fun setTodoList(listOfTodo: List<Todo>) {
-        this.listOfTodo.clear()
-        this.listOfTodo.addAll(listOfTodo)
+    fun setTodoList(listOfTodoLocal: List<TodoLocal>) {
+        this.listOfTodoLocal.clear()
+        this.listOfTodoLocal.addAll(listOfTodoLocal)
         notifyDataSetChanged()
     }
 
-    fun addTodoList(listOfTodo: List<Todo>) {
-        this.listOfTodo.addAll(listOfTodo)
+    fun addTodoList(listOfTodoLocal: List<TodoLocal>) {
+        this.listOfTodoLocal.addAll(listOfTodoLocal)
         notifyDataSetChanged()
     }
 
-    fun addTodo(todo: Todo) {
-        this.listOfTodo.add(todo)
+    fun addTodo(todo: TodoLocal) {
+        this.listOfTodoLocal.add(todo)
         notifyDataSetChanged()
     }
 
-    fun getTodoList(): ArrayList<Todo> {
-        return listOfTodo
+    fun updateTodo(todo: TodoLocal) {
+        notifyDataSetChanged()
     }
 
-    fun getIncompleteTodoList(): ArrayList<Todo> {
-        val incompleteList = ArrayList<Todo>()
-        listOfTodo.forEach {
+    fun getTodoList(): ArrayList<TodoLocal> {
+        return listOfTodoLocal
+    }
+
+    fun getIncompleteTodoList(): ArrayList<TodoLocal> {
+        val incompleteList = ArrayList<TodoLocal>()
+        listOfTodoLocal.forEach {
             if(!it.completed) incompleteList.add(it)
         }
 
         return incompleteList
     }
 
-    fun getCompletedTodoList(): ArrayList<Todo> {
-        val completedList = ArrayList<Todo>()
-        listOfTodo.forEach {
+    fun getCompletedTodoList(): ArrayList<TodoLocal> {
+        val completedList = ArrayList<TodoLocal>()
+        listOfTodoLocal.forEach {
             if(it.completed) completedList.add(it)
         }
 
         return completedList
     }
 
-    fun setListener(listener: TodoClickEvent) {
+    fun setListener(listener: TodoLocalClickEvent) {
         this.listener = listener
     }
 
+
     fun clear() {
-        listOfTodo.clear()
+        listOfTodoLocal.clear()
         notifyDataSetChanged()
     }
 
@@ -69,12 +73,12 @@ class TodoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return TodoHolder(binding)
     }
 
-    override fun getItemCount(): Int = listOfTodo.size
+    override fun getItemCount(): Int = listOfTodoLocal.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val holder = viewHolder as TodoHolder
 
-        holder.bind(listOfTodo[position], listener)
+        holder.bindLocal(listOfTodoLocal[position], listener)
     }
 
 }
