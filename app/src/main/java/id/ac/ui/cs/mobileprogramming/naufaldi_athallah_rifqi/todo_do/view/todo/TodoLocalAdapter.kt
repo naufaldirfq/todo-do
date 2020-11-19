@@ -40,7 +40,7 @@ class TodoLocalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun getIncompleteTodoList(): ArrayList<TodoLocal> {
         val incompleteList = ArrayList<TodoLocal>()
         listOfTodoLocal.forEach {
-            if(!it.completed) incompleteList.add(it)
+            if(!it.isCompleted) incompleteList.add(it)
         }
 
         return incompleteList
@@ -49,7 +49,7 @@ class TodoLocalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun getCompletedTodoList(): ArrayList<TodoLocal> {
         val completedList = ArrayList<TodoLocal>()
         listOfTodoLocal.forEach {
-            if(it.completed) completedList.add(it)
+            if(it.isCompleted) completedList.add(it)
         }
 
         return completedList

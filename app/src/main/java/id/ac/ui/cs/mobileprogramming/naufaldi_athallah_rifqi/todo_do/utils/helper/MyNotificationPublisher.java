@@ -1,11 +1,13 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.helper;
 
-import android.app.Notification ;
-import android.app.NotificationChannel ;
-import android.app.NotificationManager ;
-import android.content.BroadcastReceiver ;
-import android.content.Context ;
-import android.content.Intent ;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
+import static id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo.TodoLocalActivity.NOTIFICATION_CHANNEL_ID;
 
 public class MyNotificationPublisher extends BroadcastReceiver {
     public static String NOTIFICATION_ID = "notification-id" ;
@@ -15,7 +17,7 @@ public class MyNotificationPublisher extends BroadcastReceiver {
         Notification notification = intent.getParcelableExtra( NOTIFICATION ) ;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ) {
             int importance = NotificationManager.IMPORTANCE_HIGH ;
-            NotificationChannel notificationChannel = new NotificationChannel( "10001" , "NOTIFICATION_CHANNEL_NAME" ,importance) ;
+            NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID , "Todo Reminder" ,importance) ;
             assert notificationManager != null;
             notificationManager.createNotificationChannel(notificationChannel);
         }

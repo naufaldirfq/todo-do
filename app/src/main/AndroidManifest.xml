@@ -2,11 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name = "android.permission.VIBRATE" />
 
-    <application
+    <application android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_colored_notes"
         android:label="@string/app_name"
@@ -34,16 +37,33 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        <activity
-            android:name=".view.todo.TodoLocalActivity"
-            android:launchMode="singleTop"/>
+        <activity android:name=".view.todo.TodoLocalActivity"/>
         <activity android:name=".view.auth.UserFormActivity"/>
-        <activity android:name=".view.profile.ProfileActivity"/>
+        <activity
+            android:name=".view.profile.ProfileActivity"
+            android:theme="@style/AppTheme.WithActionBar"
+            android:parentActivityName=".view.todo.TodoLocalActivity"/>
+        <activity android:name=".utils.helper.ImagePickerActivity"/>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Design.NoActionBar" />
+        <!-- cache directory file provider paths -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <receiver android:name= ".utils.helper.MyNotificationPublisher">
         <intent-filter>
             <action android:name="NOTIFICATION_SERVICE" />
         </intent-filter>
         </receiver>
     </application>
+
 
 </manifest>

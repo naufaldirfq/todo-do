@@ -1,10 +1,7 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.R
@@ -31,6 +28,7 @@ class UserFormActivity : AppCompatActivity() {
             val username = et_name.text.toString()
             AppPreferences.username = username
             AppPreferences.isLogin = true
+            AppPreferences.image = ""
             Toaster(this).showToast("Hello $username")
             intent = Intent(this, TodoLocalActivity::class.java)
             startActivity(intent)

@@ -1,11 +1,11 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.repositories
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoLocal
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoDao
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoDatabase
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.firebase.callback.TodoCallback
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoLocal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -29,6 +29,8 @@ class TodoRepository(application: Application) {
 
     fun updateTodo(todoLocal: TodoLocal) = runBlocking {
         this.launch(Dispatchers.IO) {
+            Log.d("RP UPDATED TODO>", todoLocal.todo)
+            Log.d("RP COMPLETED", todoLocal.isCompleted.toString())
             todoDao.updateTodo(todoLocal)
         }
     }

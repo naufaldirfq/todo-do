@@ -11,6 +11,7 @@ object AppPreferences {
     //SharedPreferences variables
     private val IS_LOGIN = Pair("is_login", false)
     private val USERNAME = Pair("username", "")
+    private val IMAGE = Pair("image", "")
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(USER, MODE)
@@ -34,6 +35,12 @@ object AppPreferences {
         get() = preferences.getString(USERNAME.first, USERNAME.second) ?: ""
         set(value) = preferences.edit {
             it.putString(USERNAME.first, value)
+        }
+
+    var image: String
+        get() = preferences.getString(IMAGE.first, IMAGE.second) ?: ""
+        set(value) = preferences.edit {
+            it.putString(IMAGE.first, value)
         }
 
 }

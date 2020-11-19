@@ -1,6 +1,7 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.local.TodoLocal
@@ -16,6 +17,8 @@ class TodoViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateTodo(todoLocal: TodoLocal){
+        Log.d("VM UPDATED TODO>", todoLocal.todo)
+        Log.d("VM COMPLETED", todoLocal.isCompleted.toString())
         repository.updateTodo(todoLocal)
     }
 

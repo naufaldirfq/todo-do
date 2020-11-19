@@ -35,5 +35,6 @@
     <string name="clear_completed_tasks_success_message">All completed tasks cleared successfully!</string>
     <string name="task_marked_as_completed_success_message">Task marked as completed</string>
     <string name="task_marked_as_incomplete_success_message">Task marked as incomplete!</string>
+    <string name="edit_profile_picture">Edit Profile Picture</string>
 
 </resources>
