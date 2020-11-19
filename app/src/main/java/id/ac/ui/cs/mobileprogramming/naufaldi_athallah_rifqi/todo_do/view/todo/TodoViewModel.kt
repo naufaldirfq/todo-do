@@ -27,4 +27,8 @@ class TodoViewModel(application: Application) : AndroidViewModel(application) {
         return allTodoLocalList
     }
 
+    fun deleteAllTodoList() {
+        repository.deleteAllTodoList()
+    }
+
 }

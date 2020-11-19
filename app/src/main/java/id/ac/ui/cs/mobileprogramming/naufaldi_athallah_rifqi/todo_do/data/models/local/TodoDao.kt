@@ -17,4 +17,7 @@ interface TodoDao {
 
     @Delete
     fun deleteTodo(todoLocal: TodoLocal?)
+
+    @Query("DELETE FROM TodoLocal")
+    fun deleteAllTodoList()
 }

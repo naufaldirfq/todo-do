@@ -1,7 +1,6 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
@@ -54,17 +54,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
+    TimePickerDialog.OnTimeSetListener {
     private var day = 0
     private var month: Int = 0
     private var year: Int = 0
     private var hour: Int = 0
     private var minute: Int = 0
-    private var myDay = 0
-    private var myMonth: Int = 0
-    private var myYear: Int = 0
-    private var myHour: Int = 0
-    private var myMinute: Int = 0
     private var textDate: String = ""
 
     private val adapter = TodoLocalAdapter()
@@ -74,6 +70,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private lateinit var userViewModel: ProfileViewModel
 
     private lateinit var googleSignInClient: GoogleSignInClient
+
     //Firebase Auth
     private lateinit var mAuth: FirebaseAuth
 
@@ -100,32 +97,47 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        myDay = dayOfMonth
-        myYear = year
-        myMonth = month+1
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         hour = calendar.get(Calendar.HOUR)
         minute = calendar.get(Calendar.MINUTE)
-//        updateDateInView()
-        Log.d("TODAY", DateFormat.format(FormatUtil.dd_MMM_yyyy, Date()).toString())
-//        val binding = DataBindingUtil.inflate<PromptTodoBinding>(
-//            layoutInflater, R.layout.prompt_todo, null, false
-//        )
-        textDate = "$myDay/$myMonth/$myYear"
-        Log.d("INPUTTED DATE", textDate)
-        binding.tietTodoDate.text = SpannableStringBuilder(textDate)
-        Log.d("DATE ON FORM", binding.tietTodoDate.text.toString())
-        val timePickerDialog = TimePickerDialog(this@TodoLocalActivity, this@TodoLocalActivity, hour, minute,
-            DateFormat.is24HourFormat(this))
+        val timePickerDialog = TimePickerDialog(
+            this@TodoLocalActivity, this@TodoLocalActivity, hour, minute,
+            DateFormat.is24HourFormat(this)
+        )
         timePickerDialog.show()
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        myHour = hourOfDay
-        myMinute = minute
-//        textView.text = "Year: " + myYear + "\n" + "Month: " + myMonth + "\n" + "Day: " + myDay + "\n" + "Hour: " + myHour + "\n" + "Minute: " + myMinute
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+        updateDateInView()
     }
 
-    private fun ImageView.load(url: String?){
+    private fun scheduleNotification(notification: Notification, delay: Long) {
+        Log.d("DELAY >", delay.toString())
+        intent = Intent(this, MyNotificationPublisher::class.java)
+        intent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, 1)
+        intent.putExtra(MyNotificationPublisher.NOTIFICATION, notification)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmManager: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent)
+    }
+
+    private fun getNotification(content: String, title: String): Notification {
+        val builder : NotificationCompat.Builder = NotificationCompat.Builder(this, "default")
+        builder.setContentTitle(title)
+        builder.setContentText(content)
+        builder.setSmallIcon(R.mipmap.ic_colored_notes)
+        builder.setAutoCancel(true)
+        builder.setChannelId("10001")
+        return builder.build()
+    }
+
+    private fun ImageView.load(url: String?) {
         ImageLoader.load(url, this)
     }
 
@@ -136,9 +148,9 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun initView() {
-        adapter.setListener(object: TodoLocalClickEvent {
+        adapter.setListener(object : TodoLocalClickEvent {
             override fun onClickTodoLocal(todoLocal: TodoLocal, action: String, position: Int) {
-                when(action) {
+                when (action) {
                     TodoClickEvent.ACTION_COMPLETE -> toggleMarkAsComplete(todoLocal, position)
                     TodoClickEvent.ACTION_DETAILS -> showDetails(todoLocal)
                     TodoClickEvent.ACTION_EDIT -> editTodo(todoLocal, position)
@@ -156,7 +168,8 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 swipe_refresh.isRefreshing = false
             }
                 , 4000)
-            loadTodoList() }
+            loadTodoList()
+        }
     }
 
     private fun initViewModel() {
@@ -170,8 +183,9 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun initGoogleSignInClient() {
-        val googleSignInOptions : GoogleSignInOptions = GoogleSignInOptions.Builder(
-            GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions.Builder(
+            GoogleSignInOptions.DEFAULT_SIGN_IN
+        )
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
@@ -181,12 +195,12 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private fun loadAllTodoList() {
         todoViewModel.getAllTodoList().observe(this, Observer {
             adapter.setTodoList(it)
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 img_no_data.visibility = View.INVISIBLE
                 rv_todo_list.visibility = View.VISIBLE
                 adapter.setTodoList(it)
                 updateStatus()
-            }else {
+            } else {
                 img_no_data.visibility = View.VISIBLE
                 rv_todo_list.visibility = View.INVISIBLE
             }
@@ -210,23 +224,24 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.label_add_todo)
             .setView(binding.root)
-            .setPositiveButton(R.string.label_add_todo) {
-                    _, _ ->
+            .setPositiveButton(R.string.label_add_todo) { _, _ ->
                 swipe_refresh.isRefreshing = true
 
                 val todoTitle = binding.tietTodoTitle.text.toString()
-                val date = binding.tietTodoDate.text.toString()
+                val todoDate = binding.tietTodoDate.text.toString()
 
                 val todo = TodoLocal(
-                    todoTitle, false, date, ""
+                    todoTitle, false, todoDate, ""
                 )
                 todoViewModel.addTodo(todo)
                 swipe_refresh.isRefreshing = false
                 img_no_data.visibility = View.INVISIBLE
                 rv_todo_list.visibility = View.VISIBLE
                 adapter.addTodo(todo)
+                Log.d("CALENDAR TIME", calendar.time.time.toString())
+                scheduleNotification(getNotification(todoDate, todoTitle), calendar.time.time)
             }
-            .setNegativeButton(R.string.label_cancel) { _, _-> }
+            .setNegativeButton(R.string.label_cancel) { _, _ -> }
             .create()
 
         dialog.setOnShowListener {
@@ -238,9 +253,11 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun updateDateInView() {
-        val myFormat = "MM/dd/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        tiet_todo_date!!.text = SpannableStringBuilder(sdf.format(calendar.time))
+        val format = "dd/MM/yyyy hh:mm a"
+        val sdf = SimpleDateFormat(format, Locale.US)
+        textDate = sdf.format(calendar.time)
+        Log.d("INPUTTED DATE", textDate)
+        binding.tietTodoDate.text = SpannableStringBuilder(textDate)
     }
 
     private fun loadTodoList() {
@@ -248,12 +265,12 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         todoViewModel = ViewModelProvider(this).get(TodoViewModel::class.java)
         todoViewModel.getAllTodoList().observe(this, Observer {
             adapter.setTodoList(it)
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 img_no_data.visibility = View.INVISIBLE
                 rv_todo_list.visibility = View.VISIBLE
                 adapter.setTodoList(it)
                 updateStatus()
-            }else {
+            } else {
                 img_no_data.visibility = View.VISIBLE
                 rv_todo_list.visibility = View.INVISIBLE
             }
@@ -266,7 +283,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         container_profile.visibility = View.VISIBLE
 
         var status = getString(R.string.label_no_todo_list_found)
-        if(adapter.itemCount > 0) {
+        if (adapter.itemCount > 0) {
             status = "${adapter.itemCount} to-do(s) found"
         }
 
@@ -314,7 +331,10 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun deleteAllTodo() {
-
+        swipe_refresh.isRefreshing = true
+        todoViewModel.deleteAllTodoList()
+        swipe_refresh.isRefreshing = false
+        updateStatus()
     }
 
     private fun markAllAsCompletedTodo() {
@@ -335,7 +355,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             month = calendar.get(Calendar.MONTH)
             year = calendar.get(Calendar.YEAR)
             val datePickerDialog =
-                DatePickerDialog(this@TodoLocalActivity, this@TodoLocalActivity, year, month,day)
+                DatePickerDialog(this@TodoLocalActivity, this@TodoLocalActivity, year, month, day)
             datePickerDialog.show()
         }
 
@@ -343,20 +363,22 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.label_add_todo)
             .setView(binding.root)
-            .setPositiveButton(R.string.label_update_todo) {
-                    _, _ ->
+            .setPositiveButton(R.string.label_update_todo) { _, _ ->
                 swipe_refresh.isRefreshing = true
 
                 val todoTitle = binding.tietTodoTitle.text.toString()
-                val date = binding.tietTodoDate.text.toString()
+                val todoDateUpdated = binding.tietTodoDate.text.toString()
+                Log.d("UPDATED TODO", todoTitle)
+                Log.d("UPDATED TIME", todoDateUpdated)
 
                 val todo = TodoLocal(
-                    todoTitle, false, date, ""
+                    todoTitle, false, todoDateUpdated, ""
                 )
                 todoViewModel.updateTodo(todo)
                 swipe_refresh.isRefreshing = false
+                scheduleNotification(getNotification(todoDateUpdated, todoTitle), calendar.time.time)
             }
-            .setNegativeButton(R.string.label_cancel) { _, _-> }
+            .setNegativeButton(R.string.label_cancel) { _, _ -> }
             .create()
 
         dialog.setOnShowListener {
@@ -369,7 +391,9 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun deleteTodo(todoLocal: TodoLocal, position: Int) {
-
+        swipe_refresh.isRefreshing = true
+        todoViewModel.deleteTodo(todoLocal)
+        swipe_refresh.isRefreshing = false
     }
 
     private fun goToSettingsActivity(): Boolean {
@@ -406,8 +430,9 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun getGoogleAuthCredential(acct: GoogleSignInAccount) {
-        val googleTokenId : String? = acct.idToken
-        val googleAuthCredential : AuthCredential = GoogleAuthProvider.getCredential(googleTokenId, null)
+        val googleTokenId: String? = acct.idToken
+        val googleAuthCredential: AuthCredential =
+            GoogleAuthProvider.getCredential(googleTokenId, null)
         signInWithGoogleAuthCredential(googleAuthCredential)
     }
 
@@ -423,7 +448,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         })
     }
 
-    private fun createNewUser(authenticatedUser : User) {
+    private fun createNewUser(authenticatedUser: User) {
         authViewModel.createUser(authenticatedUser)
         authViewModel.createdUserLiveData.observe(this, Observer {
             if (it.isCreated) {
@@ -433,7 +458,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         })
     }
 
-    private fun goToMainActivity(user : User) {
+    private fun goToMainActivity(user: User) {
         intent = Intent(this, MainActivity::class.java)
         intent.putExtra(Const.Collection.USER, user)
         startActivity(intent)

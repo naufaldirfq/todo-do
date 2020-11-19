@@ -45,4 +45,10 @@ class TodoRepository(application: Application) {
     fun getAllTodoList(): LiveData<List<TodoLocal>> {
         return allTodos
     }
+
+    fun deleteAllTodoList()  = runBlocking {
+        this.launch(Dispatchers.IO) {
+            todoDao.deleteAllTodoList()
+        }
+    }
 }
