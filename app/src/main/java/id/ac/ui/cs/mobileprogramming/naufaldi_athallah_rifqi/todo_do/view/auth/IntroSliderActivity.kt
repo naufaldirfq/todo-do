@@ -1,11 +1,11 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,13 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.MainActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.R
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.SplashScreenViewModel
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models.User
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Const
-import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo.TodoLocalActivity
 import kotlinx.android.synthetic.main.activity_intro_slider.*
 
 class IntroSliderActivity : AppCompatActivity() {
@@ -57,12 +58,13 @@ class IntroSliderActivity : AppCompatActivity() {
             )
         vpIntroSlider.adapter = adapter
         fragmentList.addAll(listOf(
-            IntroFirstFragment(),
-            IntroSecondFragment()
+            IntroFirstFragment()
+//            IntroSecondFragment()
         ))
         adapter.setFragmentList(fragmentList)
-        indicatorLayout.setIndicatorCount(adapter.itemCount)
-        indicatorLayout.selectCurrentPosition(0)
+        indicatorLayout.visibility = View.GONE
+//        indicatorLayout.setIndicatorCount(adapter.itemCount)
+//        indicatorLayout.selectCurrentPosition(0)
         registerListeners()
 
         initAuthViewModel()
@@ -153,27 +155,29 @@ class IntroSliderActivity : AppCompatActivity() {
         vpIntroSlider.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 indicatorLayout.selectCurrentPosition(position)
-                if (position < fragmentList.lastIndex) {
-                    tvSkip.visibility = View.VISIBLE
-                    tvNext.text = "Next"
-                } else {
-                    tvSkip.visibility = View.VISIBLE
-                    tvNext.text = "Continue With Google"
-                }
+                tvSkip.visibility = View.GONE
+//                if (position < fragmentList.lastIndex) {
+//                    tvSkip.visibility = View.VISIBLE
+//                    tvNext.text = "Continue"
+//                } else {
+//                    tvSkip.visibility = View.VISIBLE
+//                    tvNext.text = "Continue With Google"
+//                }
             }
         })
         tvSkip.setOnClickListener {
-            val position = vpIntroSlider.currentItem
-            vpIntroSlider.currentItem = position + 1
+//            val position = vpIntroSlider.currentItem
+//            vpIntroSlider.currentItem = position + 1
             goToUserFormActivity()
         }
         tvNext.setOnClickListener {
-            val position = vpIntroSlider.currentItem
-            if (position < fragmentList.lastIndex) {
-                vpIntroSlider.currentItem = position + 1
-            } else {
-                signIn()
-            }
+            goToUserFormActivity()
+//            val position = vpIntroSlider.currentItem
+//            if (position < fragmentList.lastIndex) {
+//                vpIntroSlider.currentItem = position + 1
+//            } else {
+//                signIn()
+//            }
         }
     }
 }

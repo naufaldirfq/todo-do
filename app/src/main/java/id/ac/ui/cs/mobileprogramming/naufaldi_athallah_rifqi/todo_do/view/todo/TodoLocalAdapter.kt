@@ -1,5 +1,6 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,6 +10,8 @@ import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.data.models
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.databinding.ItemTodoBinding
 
 class TodoLocalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+
 
     private var listOfTodoLocal = ArrayList<TodoLocal>()
     private var listener: TodoLocalClickEvent? = null
@@ -25,11 +28,24 @@ class TodoLocalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun addTodo(todo: TodoLocal) {
-        this.listOfTodoLocal.add(todo)
+        listOfTodoLocal.add(todo)
         notifyDataSetChanged()
     }
 
     fun updateTodo(todo: TodoLocal) {
+        listOfTodoLocal.clear()
+        listOfTodoLocal.addAll(listOfTodoLocal)
+        notifyDataSetChanged()
+    }
+
+    fun deleteTodo(todo: TodoLocal) {
+        listOfTodoLocal.remove(todo)
+        notifyDataSetChanged()
+    }
+
+    fun deleteAllTodo() {
+        listOfTodoLocal.clear()
+        Log.d("SIZE AFTER DELETE ALL", listOfTodoLocal.size.toString())
         notifyDataSetChanged()
     }
 
@@ -59,11 +75,6 @@ class TodoLocalAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.listener = listener
     }
 
-
-    fun clear() {
-        listOfTodoLocal.clear()
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = DataBindingUtil.inflate<ItemTodoBinding>(

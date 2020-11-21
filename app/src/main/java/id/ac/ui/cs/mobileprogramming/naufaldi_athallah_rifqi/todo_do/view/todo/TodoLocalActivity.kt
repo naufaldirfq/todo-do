@@ -114,7 +114,6 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun scheduleNotification(notification: Notification, delay: Long) {
-        Log.d("DELAY >", delay.toString())
         intent = Intent(this, MyNotificationPublisher::class.java)
         intent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, 1)
         intent.putExtra(MyNotificationPublisher.NOTIFICATION, notification)
@@ -166,6 +165,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             }
                 , 4000)
             loadTodoList()
+            updateStatus()
         }
     }
 
@@ -246,6 +246,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             if (it.isNotEmpty()) {
                 img_no_data.visibility = View.INVISIBLE
                 rv_todo_list.visibility = View.VISIBLE
+//                Log.d("TODO>>>>>> ", it[1].todo)
                 adapter.setTodoList(it)
                 updateStatus()
             } else {
@@ -284,8 +285,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     private fun toggleMarkAsComplete(todoLocal: TodoLocal, position: Int) {
-//        swipe_refresh.isRefreshing = true
-        val id = todo?.id
+        val id = todoLocal.id
         Log.d("ISCOMPLETED", todoLocal.isCompleted.toString())
         val todo: TodoLocal = if (todoLocal.isCompleted) {
             TodoLocal(id, todoLocal.todo, false, todoLocal.date, "")
@@ -294,10 +294,6 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         }
         Log.d("Updated IsCompleted>", todo.isCompleted.toString())
         todoViewModel.updateTodo(todo)
-        adapter.updateTodo(todo)
-//        swipe_refresh.isRefreshing = false
-        loadTodoList()
-
 
     }
 
@@ -332,6 +328,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private fun deleteAllTodo() {
         swipe_refresh.isRefreshing = true
         todoViewModel.deleteAllTodoList()
+        adapter.deleteAllTodo()
         swipe_refresh.isRefreshing = false
         updateStatus()
     }
@@ -369,15 +366,15 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 val todoDateUpdated = binding.tietTodoDate.text.toString()
                 Log.d("UPDATED TODO", todoTitle)
                 Log.d("UPDATED TIME", todoDateUpdated)
-                val id = todo?.id
+                val id = todoLocal.id
+                Log.d("TODO ID", id.toString())
                 val todo = TodoLocal(
                     id, todoTitle, false, todoDateUpdated, ""
                 )
                 todoViewModel.updateTodo(todo)
-                adapter.updateTodo(todo)
+//                adapter.updateTodo(todo)
                 swipe_refresh.isRefreshing = false
                 scheduleNotification(getNotification(todoDateUpdated, todoTitle), calendar.time.time)
-                loadTodoList()
             }
             .setNegativeButton(R.string.label_cancel) { _, _ -> }
             .create()
@@ -394,6 +391,8 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private fun deleteTodo(todoLocal: TodoLocal, position: Int) {
         swipe_refresh.isRefreshing = true
         todoViewModel.deleteTodo(todoLocal)
+        adapter.deleteTodo(todoLocal)
+        updateStatus()
         swipe_refresh.isRefreshing = false
     }
 

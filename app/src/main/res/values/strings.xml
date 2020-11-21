@@ -36,5 +36,9 @@
     <string name="task_marked_as_completed_success_message">Task marked as completed</string>
     <string name="task_marked_as_incomplete_success_message">Task marked as incomplete!</string>
     <string name="edit_profile_picture">Edit Profile Picture</string>
+    <string name="go">GO</string>
+    <string name="whats_your_name">What\'s your name?</string>
+    <string name="name">Name</string>
+    <string name="save">Save</string>
 
 </resources>

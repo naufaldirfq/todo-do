@@ -29,8 +29,8 @@ class TodoRepository(application: Application) {
 
     fun updateTodo(todoLocal: TodoLocal) = runBlocking {
         this.launch(Dispatchers.IO) {
-            Log.d("RP UPDATED TODO>", todoLocal.todo)
-            Log.d("RP COMPLETED", todoLocal.isCompleted.toString())
+            Log.d("UPDATED TODO", todoLocal.todo)
+            Log.d("UPDATED TIME", todoLocal.date)
             todoDao.updateTodo(todoLocal)
         }
     }
@@ -45,6 +45,7 @@ class TodoRepository(application: Application) {
     }
 
     fun getAllTodoList(): LiveData<List<TodoLocal>> {
+        Log.d("ALL TODO UPDATE", allTodos.value.toString())
         return allTodos
     }
 
@@ -53,4 +54,5 @@ class TodoRepository(application: Application) {
             todoDao.deleteAllTodoList()
         }
     }
+
 }

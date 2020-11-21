@@ -36,11 +36,26 @@
         android:clickable="true"
         android:background="?selectableItemBackground"
         />
-    <TextView
+<!--    <TextView-->
+<!--        android:id="@+id/tvNext"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Next"-->
+<!--        android:textAllCaps="true"-->
+<!--        android:textColor="@android:color/white"-->
+<!--        android:textSize="16sp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:padding="8dp"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:clickable="true"-->
+<!--        android:background="?selectableItemBackground"-->
+<!--        />-->
+
+    <ImageView
         android:id="@+id/tvNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="16sp"
@@ -50,5 +65,5 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:background="?selectableItemBackground"
-        />
+        app:srcCompat="@drawable/ic_action_next" />
 </RelativeLayout>

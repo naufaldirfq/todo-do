@@ -17,8 +17,8 @@ class TodoViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateTodo(todoLocal: TodoLocal){
-        Log.d("VM UPDATED TODO>", todoLocal.todo)
-        Log.d("VM COMPLETED", todoLocal.isCompleted.toString())
+        Log.d("UPDATED TODO", todoLocal.todo)
+        Log.d("UPDATED TIME", todoLocal.date)
         repository.updateTodo(todoLocal)
     }
 

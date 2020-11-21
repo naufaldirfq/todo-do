@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="What's your name?"
+        android:text="@string/whats_your_name"
         android:layout_marginTop="@dimen/space_5"
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
@@ -21,7 +21,7 @@
         android:id="@+id/et_name"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="20dp"
-        android:hint="Name"
+        android:hint="@string/name"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
@@ -30,7 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="@string/save"
         android:id="@+id/save_name"
         android:layout_below="@+id/et_name"
         android:layout_centerHorizontal="true"
