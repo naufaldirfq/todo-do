@@ -304,11 +304,11 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         Log.d("ON OPTIONS ITEM", "CLICKED")
         when (item!!.itemId) {
-//            R.id.app_bar_settings -> {
-//                goToSettingsActivity()
-//                return true
-//
-//            }
+            R.id.app_bar_settings -> {
+                goToSettingsActivity()
+                return true
+
+            }
             R.id.app_bar_delete_todo -> {
                 deleteAllTodo()
                 return true
@@ -317,10 +317,10 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 markAllAsCompletedTodo()
                 return true
             }
-//            R.id.app_bar_sign_in_with_google -> {
-//                signInWithGoogle()
-//                return true
-//            }
+            R.id.app_bar_sign_in_with_google -> {
+                signInWithGoogle()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }

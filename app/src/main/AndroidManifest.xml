@@ -24,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop" />
@@ -40,6 +41,9 @@
         </activity>
         <activity android:name=".view.todo.TodoLocalActivity"/>
         <activity android:name=".view.auth.UserFormActivity"/>
+        <activity android:name=".view.opengl.GL2JNIActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".view.profile.ProfileActivity"
             android:theme="@style/AppTheme.WithActionBar"

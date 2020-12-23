@@ -3,6 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/app_bar_settings"
+        android:title="Settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/app_bar_opengl"
+        android:title="OpenGL Sample"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/app_bar_sign_in_with_google"
+        android:title="Sign In With Google"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/app_bar_edit_todo"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="Edit"

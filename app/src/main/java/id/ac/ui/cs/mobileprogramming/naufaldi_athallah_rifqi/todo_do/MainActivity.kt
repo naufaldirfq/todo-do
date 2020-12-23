@@ -1,14 +1,19 @@
 package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.SpannableStringBuilder
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.DatePicker
 import android.widget.ImageView
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,16 +43,26 @@ import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo.T
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_profile.*
 import kotlinx.android.synthetic.main.layout_profile.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
+class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener, DatePickerDialog.OnDateSetListener,
+    TimePickerDialog.OnTimeSetListener {
+    private var day = 0
+    private var month: Int = 0
+    private var year: Int = 0
+    private var hour: Int = 0
+    private var minute: Int = 0
+    private var textDate: String = ""
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val remote: FirestoreService by lazy { FirestoreService() }
 
     private val adapter = TodoAdapter()
 
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var binding: PromptTodoBinding
+    private val calendar: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +80,39 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
         val inflater = menuInflater
         inflater.inflate(R.menu.bottomappbar_menu, menu)
         return true
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        hour = calendar.get(Calendar.HOUR)
+        minute = calendar.get(Calendar.MINUTE)
+        val timePickerDialog = TimePickerDialog(
+            this@MainActivity, this@MainActivity, hour, minute,
+            DateFormat.is24HourFormat(this)
+        )
+        timePickerDialog.show()
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+        updateDateInView()
+    }
+
+    private fun updateDateInView() {
+        val format = "dd/MM/yyyy hh:mm a"
+        val sdf = SimpleDateFormat(format, Locale.US)
+        textDate = sdf.format(calendar.time)
+        binding.tietTodoDate.text = SpannableStringBuilder(textDate)
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.inflate(
+            layoutInflater, R.layout.prompt_todo, null, false
+        )
     }
 
     private fun getUserFromIntent() : User {
@@ -107,12 +155,17 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
     }
 
     private fun addTodo(user: User) {
-        val binding = DataBindingUtil.inflate<PromptTodoBinding>(
-            layoutInflater, R.layout.prompt_todo, null, false
-        )
-
-        val dateNow = FormatUtil().formatDate(Date(), FormatUtil.dd_MMM_yyyy)
-//        binding.tietTodoDate.text = SpannableStringBuilder(dateNow)
+        initBinding()
+        binding.tietTodoDate.setOnClickListener {
+            Log.d("TODO DATE", "Clicked")
+            val calendar: Calendar = Calendar.getInstance()
+            day = calendar.get(Calendar.DAY_OF_MONTH)
+            month = calendar.get(Calendar.MONTH)
+            year = calendar.get(Calendar.YEAR)
+            val datePickerDialog =
+                DatePickerDialog(this@MainActivity, this@MainActivity, year, month, day)
+            datePickerDialog.show()
+        }
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(R.string.label_add_todo)
@@ -122,10 +175,9 @@ class MainActivity : AppCompatActivity(), FirebaseAuth.AuthStateListener {
                 swipe_refresh.isRefreshing = true
 
                 val todoTitle = binding.tietTodoTitle.text.toString()
-//                val date = binding.tietTodoDate.text.toString()
-
+                val todoDate = binding.tietTodoDate.text.toString()
                 val todo = Todo(
-                    "", todoTitle, false, "", user.uid!!, ""
+                    "", todoTitle, false, todoDate, user.uid!!, ""
                 )
 
                 remote.addTodo(todo, object: TodoCallback {

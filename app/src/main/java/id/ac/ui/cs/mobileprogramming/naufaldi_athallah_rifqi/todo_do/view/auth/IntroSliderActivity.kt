@@ -58,13 +58,13 @@ class IntroSliderActivity : AppCompatActivity() {
             )
         vpIntroSlider.adapter = adapter
         fragmentList.addAll(listOf(
-            IntroFirstFragment()
-//            IntroSecondFragment()
+            IntroFirstFragment(),
+            IntroSecondFragment()
         ))
         adapter.setFragmentList(fragmentList)
         indicatorLayout.visibility = View.GONE
-//        indicatorLayout.setIndicatorCount(adapter.itemCount)
-//        indicatorLayout.selectCurrentPosition(0)
+        indicatorLayout.setIndicatorCount(adapter.itemCount)
+        indicatorLayout.selectCurrentPosition(0)
         registerListeners()
 
         initAuthViewModel()
@@ -156,28 +156,27 @@ class IntroSliderActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 indicatorLayout.selectCurrentPosition(position)
                 tvSkip.visibility = View.GONE
-//                if (position < fragmentList.lastIndex) {
-//                    tvSkip.visibility = View.VISIBLE
-//                    tvNext.text = "Continue"
-//                } else {
-//                    tvSkip.visibility = View.VISIBLE
-//                    tvNext.text = "Continue With Google"
-//                }
+                if (position < fragmentList.lastIndex) {
+                    tvSkip.visibility = View.VISIBLE
+                    tvNext.text = "Continue"
+                } else {
+                    tvSkip.visibility = View.VISIBLE
+                    tvNext.text = "Continue With Google"
+                }
             }
         })
         tvSkip.setOnClickListener {
-//            val position = vpIntroSlider.currentItem
-//            vpIntroSlider.currentItem = position + 1
+            val position = vpIntroSlider.currentItem
+            vpIntroSlider.currentItem = position + 1
             goToUserFormActivity()
         }
         tvNext.setOnClickListener {
-            goToUserFormActivity()
-//            val position = vpIntroSlider.currentItem
-//            if (position < fragmentList.lastIndex) {
-//                vpIntroSlider.currentItem = position + 1
-//            } else {
-//                signIn()
-//            }
+            val position = vpIntroSlider.currentItem
+            if (position < fragmentList.lastIndex) {
+                vpIntroSlider.currentItem = position + 1
+            } else {
+                signIn()
+            }
         }
     }
 }

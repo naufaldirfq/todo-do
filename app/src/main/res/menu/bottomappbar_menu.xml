@@ -9,6 +9,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/app_bar_opengl"
+        android:title="OpenGL Sample"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/app_bar_sign_out"
         android:title="Sign Out"
         app:showAsAction="never"/>
