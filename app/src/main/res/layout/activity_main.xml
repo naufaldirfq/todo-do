@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,6 +57,16 @@
         app:srcCompat="@mipmap/ic_colored_notes"
         android:contentDescription="@string/description_ic_no_data"
         android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/txt_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="20dp"
+        android:text="Tidak ada data"
+        app:layout_anchor="@+id/img_no_data"
+        app:layout_anchorGravity="bottom|center" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"

@@ -3,6 +3,11 @@ package id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.todo
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.SpannableStringBuilder
@@ -21,6 +26,7 @@ import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -38,10 +44,14 @@ import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.databinding
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.Const
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.utils.helper.*
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth.AuthViewModel
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.opengl.GL2JNIActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.profile.ProfileActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.setting.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_profile.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,7 +74,9 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private val adapter = TodoLocalAdapter()
     private lateinit var binding: PromptTodoBinding
     private val calendar: Calendar = Calendar.getInstance()
+
     private lateinit var todoViewModel: TodoViewModel
+    private lateinit var cm: ConnectivityManager
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -80,7 +92,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         initViewModel()
         initGoogleSignInClient()
         initSharedPreferences()
-//        initBinding()
+        initConnectionManager()
         initView()
         updateStatus()
         loadTodoList()
@@ -178,6 +190,10 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         AppPreferences.init(this)
     }
 
+    private fun initConnectionManager() {
+        cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
     private fun initGoogleSignInClient() {
         val googleSignInOptions: GoogleSignInOptions = GoogleSignInOptions.Builder(
             GoogleSignInOptions.DEFAULT_SIGN_IN
@@ -216,6 +232,7 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 todoViewModel.addTodo(todo)
                 swipe_refresh.isRefreshing = false
                 img_no_data.visibility = View.INVISIBLE
+                txt_nodata.visibility = View.INVISIBLE
                 rv_todo_list.visibility = View.VISIBLE
                 adapter.addTodo(todo)
                 Log.d("CALENDAR TIME", calendar.time.time.toString())
@@ -246,11 +263,12 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             if (it.isNotEmpty()) {
                 img_no_data.visibility = View.INVISIBLE
                 rv_todo_list.visibility = View.VISIBLE
-//                Log.d("TODO>>>>>> ", it[1].todo)
                 adapter.setTodoList(it)
                 updateStatus()
             } else {
                 img_no_data.visibility = View.VISIBLE
+                txt_nodata.visibility = View.VISIBLE
+                txt_nodata.text = "Belum ada Todo!"
                 rv_todo_list.visibility = View.INVISIBLE
             }
         })
@@ -277,6 +295,50 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         container_profile.tv_dd.text = day.toString()
         container_profile.tv_MMM.text = FormatUtil().toMonth(calender.time)
         container_profile.tv_day.text = FormatUtil().toDay(calender.time)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val builder: NetworkRequest.Builder = NetworkRequest.Builder()
+            cm.registerNetworkCallback(
+
+                builder.build(),
+                object : ConnectivityManager.NetworkCallback() {
+
+                    override fun onAvailable(network: Network) {
+                        lifecycleScope.launch {
+                            Log.i("MainActivity", "onAvailable!")
+
+                            // check if NetworkCapabilities has TRANSPORT_WIFI
+                            val isWifi:Boolean = cm.getNetworkCapabilities(network).hasTransport(
+                                NetworkCapabilities.TRANSPORT_WIFI)
+
+                            doSomething(true, isWifi)
+                        }
+                    }
+
+                    override fun onLost(network: Network) {
+                        lifecycleScope.launch {
+                            Log.i("MainActivity", "onLost!")
+                            doSomething(false)
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    private suspend fun doSomething(isConnected:Boolean, isWifi:Boolean= false){
+        withContext(Dispatchers.Main){
+            if(isConnected) {
+                img_no_data.visibility = View.INVISIBLE
+                txt_nodata.visibility = View.INVISIBLE
+                rv_todo_list.visibility = View.VISIBLE
+            }else {
+                img_no_data.visibility = View.VISIBLE
+                txt_nodata.visibility = View.VISIBLE
+                txt_nodata.text = "Tidak ada koneksi internet!"
+                rv_todo_list.visibility = View.INVISIBLE
+            }
+        }
     }
 
     private fun goToProfile() {
@@ -321,6 +383,10 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 signInWithGoogle()
                 return true
             }
+            R.id.app_bar_opengl -> {
+                showOpenGLExample()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -335,6 +401,11 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
     private fun markAllAsCompletedTodo() {
 
+    }
+
+    private fun showOpenGLExample() {
+        intent = Intent(this, GL2JNIActivity::class.java)
+        startActivity(intent)
     }
 
     private fun editTodo(todoLocal: TodoLocal, position: Int) {
@@ -372,7 +443,6 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                     id, todoTitle, false, todoDateUpdated, ""
                 )
                 todoViewModel.updateTodo(todo)
-//                adapter.updateTodo(todo)
                 swipe_refresh.isRefreshing = false
                 scheduleNotification(getNotification(todoDateUpdated, todoTitle), calendar.time.time)
             }
