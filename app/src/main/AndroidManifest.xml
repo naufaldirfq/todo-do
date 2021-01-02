@@ -53,6 +53,10 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar" />
+        <activity
+            android:name=".view.timer.TimerActivity"
+            android:theme="@style/AppTheme.WithActionBar"
+            android:parentActivityName=".view.todo.TodoLocalActivity"/>
         <!-- cache directory file provider paths -->
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -47,6 +47,7 @@ import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.auth.A
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.opengl.GL2JNIActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.profile.ProfileActivity
 import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.setting.SettingsActivity
+import id.ac.ui.cs.mobileprogramming.naufaldi_athallah_rifqi.todo_do.view.timer.TimerActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_profile.view.*
 import kotlinx.coroutines.Dispatchers
@@ -375,8 +376,8 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 deleteAllTodo()
                 return true
             }
-            R.id.app_bar_edit_todo -> {
-                markAllAsCompletedTodo()
+            R.id.app_bar_timer -> {
+                goToTimerActivity()
                 return true
             }
             R.id.app_bar_sign_in_with_google -> {
@@ -399,8 +400,9 @@ class TodoLocalActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         updateStatus()
     }
 
-    private fun markAllAsCompletedTodo() {
-
+    private fun goToTimerActivity() {
+        intent = Intent(this, TimerActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showOpenGLExample() {
